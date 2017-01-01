@@ -1,0 +1,26 @@
+# Project directory Layout
+
+src/
+  files/
+    fonts/
+    images/
+  js/
+    collections/
+    controllers/
+    main.js
+  sass/
+    modules/
+    variables.scss
+    main.scss
+  templates/
+    partials/
+    index.jade
+
+builds/
+  development/
+    fonts/
+    images/
+    css/
+    js/
+    index.html
+  production/

@@ -1,0 +1,56 @@
+{
+  "name": "prototyp",
+  "version": "1.0.0",
+  "description": "HTML Jade SCSS JavaScript Prototyp Starter Kit",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christianmuerner/html-jade-sass-javascript-prototyp-starter-kit.git"
+  },
+  "keywords": [
+    "Prototyp",
+    "Starter",
+    "Kit",
+    "HTML",
+    "Jade",
+    "CSS",
+    "SASS",
+    "SCSS",
+    "JavaScript",
+    "JS",
+    "Gulp",
+    "Google",
+    "Fonts",
+    "Responsive",
+    "Images"
+  ],
+  "author": {
+    "name": "Christian Mürner ",
+    "email": "hallo@web3dynamit.com",
+    "url": "https://www.web3dynamit.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christianmuerner/html-jade-sass-javascript-prototyp-starter-kit/issues"
+  },
+  "homepage": "https://github.com/christianmuerner/html-jade-sass-javascript-prototyp-starter-kit#readme",
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-connect-multi": "^1.0.8",
+    "gulp-if": "^2.0.2",
+    "gulp-jade": "^1.1.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^3.0.0",
+    "gulp-sourcemaps": "^1.9.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.8",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
