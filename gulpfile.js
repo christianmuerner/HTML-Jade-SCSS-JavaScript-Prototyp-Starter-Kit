@@ -5,6 +5,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var gulp = require('gulp');
 var connect = require('gulp-connect-multi')();
 var gulpif = require('gulp-if');
+var imagemin    = require('gulp-imagemin');
 var jade = require('gulp-jade');
 var notify = require('gulp-notify');
 var plumber = require('gulp-plumber');
@@ -14,6 +15,16 @@ var uglify = require('gulp-uglify');
 var gutil = require('gulp-util');
 var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
+
+// Error notifications
+var reportError = function(error) {
+  notify({
+    title: 'Gulp Task Error',
+    message: "Error: <%= error.message %>"
+  }).write(error);
+  console.log(gutil.colors.red(error.toString()));
+  this.emit('end');
+}
 
 var env = process.env.NODE_ENV || 'development';
 // NODE_ENV=production gulp TASK
@@ -29,22 +40,21 @@ if(env === 'development') {
   sourceScript = 'script.min.js';
 }
 
-// Jade template Engine
+// Jade Template Engine
 gulp.task('jade', function() {
-  return gulp.src('src/templates/**/*.jade')
-    .pipe(plumber({
-      errorHandler: notify.onError('Error: <%= error.message %>')
-    }))
-    .pipe(jade())
+  return gulp.src(['src/templates/jade/**/*.jade', '!./jade/{templates,templates/**/*,includes,convert}/*'])
     // Error handling
-    .on('error', notify.onError({
-      title: "Error running Taks Jade",
-      message: "Error: <%= error.message %>"
+    .pipe(plumber(reportError))
+    // Generate Templates
+    .pipe(jade({
+      pretty: true
     }))
+    // Templates Destination
     .pipe(gulp.dest(configPath))
-    .on('end', function(){ gutil.log('Templates generated!'); })
+    .on('end', function(){ gutil.log(gutil.colors.green('Jade to HTML - Successful')); })
     .pipe(connect.reload());
 });
+// Terminal input for this task
 // gulp jade
 // NODE_ENV=production gulp jade
 
@@ -56,19 +66,17 @@ gulp.task('javascript', function() {
   })
   .bundle()
   // Error handling
-  .on('error', notify.onError({
-    title: "Error running Taks JavaScript",
-    message: "Error: <%= error.message %>"
-  }))
+  .on('error', reportError)
   .pipe(source(sourceScript))
   .pipe(buffer())
   .pipe(gulpif(env === 'production', uglify()))
   .pipe(sourcemaps.init({ loadMaps: true }))
   .pipe(sourcemaps.write('./maps'))
   .pipe(gulp.dest(configPath + '/js'))
-  .on('end', function(){ gutil.log('JavaScript ready!'); })
+  .on('end', function(){ gutil.log(gutil.colors.green('Scripts - Successful')); })
   .pipe(connect.reload());
 });
+// Terminal input for this task
 // gulp javascript
 // NODE_ENV=production gulp javascript
 
@@ -82,6 +90,8 @@ gulp.task('sass', function() {
     config.outputStyle = 'compressed';
   }
   return gulp.src('src/scss/main.scss')
+    // Error handling
+    .pipe(plumber(reportError))
     .pipe(sourcemaps.init())
     // Convert sass into css
     .pipe(sass(config))
@@ -93,12 +103,28 @@ gulp.task('sass', function() {
     .pipe(sourcemaps.write())
     // Save css
     .pipe(gulp.dest(configPath + '/css'))
-    .on('end', function(){ gutil.log('CSS compiled!'); })
-    //.pipe(connect.reload());
+    .on('end', function(){ gutil.log(gutil.colors.green('SCSS to CSS - Successful')); })
+    .pipe(connect.reload());
 });
+// Terminal input for this task
 // gulp sass
 // NODE_ENV=development gulp sass
 // NODE_ENV=production gulp sass
+
+// Image Compression Task with 'gulp build'
+gulp.task('imagemin', function () {
+  var cache = require('gulp-cache');
+  var imagemin = require('gulp-imagemin');
+  return gulp.src('./images/**/*')
+    // Error handling
+    .on('error', reportError)
+    .pipe(cache(imagemin({
+        progressive: true,
+        interlaced: true
+    })))
+    .pipe(gulp.dest(outputDirDevelopment + '/img'))
+    .pipe(notify(gutil.colors.green('Images Compressed - Successful')));
+});
 
 gulp.task('watch', function() {
   gulp.watch('src/templates/**/*.jade', ['jade']);
