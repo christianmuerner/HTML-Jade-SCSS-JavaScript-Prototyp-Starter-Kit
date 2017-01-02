@@ -2,6 +2,7 @@
 // load all install packages
 var browserify = require('browserify');
 var autoprefixer = require('gulp-autoprefixer');
+var cache = require('gulp-cache');
 var gulp = require('gulp');
 var connect = require('gulp-connect-multi')();
 var gulpif = require('gulp-if');
@@ -113,16 +114,14 @@ gulp.task('sass', function() {
 
 // Image Compression Task with 'gulp build'
 gulp.task('imagemin', function () {
-  var cache = require('gulp-cache');
-  var imagemin = require('gulp-imagemin');
-  return gulp.src('./images/**/*')
+  return gulp.src('src/files/images/**/*')
     // Error handling
     .on('error', reportError)
     .pipe(cache(imagemin({
         progressive: true,
         interlaced: true
     })))
-    .pipe(gulp.dest(outputDirDevelopment + '/img'))
+    .pipe(gulp.dest(outputDirDevelopment + '/images'))
     .pipe(notify(gutil.colors.green('Images Compressed - Successful')));
 });
 
@@ -130,6 +129,7 @@ gulp.task('watch', function() {
   gulp.watch('src/templates/**/*.jade', ['jade']);
   gulp.watch('src/js/**/*.js', ['javascript']);
   gulp.watch('src/scss/**/*.scss', ['sass']);
+  gulp.watch('src/files/images/**/*', ['imagemin']);
 });
 
 gulp.task('connect', connect.server({
@@ -141,4 +141,4 @@ gulp.task('connect', connect.server({
   }
 }));
 
-gulp.task('default', ['javascript', 'sass', 'jade', 'watch', 'connect']);
+gulp.task('default', ['javascript', 'sass', 'jade', 'imagemin', 'watch', 'connect']);
