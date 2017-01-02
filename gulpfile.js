@@ -43,7 +43,7 @@ if(env === 'development') {
 
 // Jade Template Engine
 gulp.task('jade', function() {
-  return gulp.src(['src/templates/jade/**/*.jade', '!./jade/{templates,templates/**/*,includes,convert}/*'])
+  return gulp.src(['src/templates/jade/**/*.jade', '!src/templates/jade/{templates,templates/**/*,includes,convert}/*'])
     // Error handling
     .pipe(plumber(reportError))
     // Generate Templates
